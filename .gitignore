@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db
+*.wav
+*.mp3
+*.zip
+*.7z
+*.rar
+.vscode/
+.idea/
