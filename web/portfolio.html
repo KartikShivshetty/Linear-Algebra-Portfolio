@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kartik Shivshetty | Linear Algebra Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --ivory: #f2f0dd;
+            --paper: #fffaf0;
+            --beige: #d8c4b8;
+            --slate: #95a1b4;
+            --sage: #a8bcb7;
+            --lavender: #dccfe5;
+            --peach: #e9c8b8;
+            --ink: #23211f;
+            --muted: #6d6760;
+            --line: rgba(35, 33, 31, 0.16);
+            --shadow: 0 22px 60px rgba(35, 33, 31, 0.10);
+            --radius: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                linear-gradient(135deg, rgba(242, 240, 221, 0.88), rgba(255, 250, 240, 0.94)),
+                radial-gradient(circle at 12% 10%, rgba(220, 207, 229, 0.45), transparent 30%),
+                radial-gradient(circle at 86% 18%, rgba(168, 188, 183, 0.45), transparent 28%);
+            color: var(--ink);
+            font-family: "Inter", sans-serif;
+        }
+
+        body.no-scroll {
+            overflow: hidden;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 1rem clamp(1rem, 4vw, 3.25rem);
+            border-bottom: 1px solid var(--line);
+            background: rgba(255, 250, 240, 0.86);
+            backdrop-filter: blur(18px);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            min-width: max-content;
+            border: 0;
+            background: transparent;
+            color: var(--ink);
+            cursor: pointer;
+            font-family: "Cormorant Garamond", serif;
+            font-size: 1.45rem;
+            font-weight: 700;
+            padding: 0;
+        }
+
+        .brand:hover .brand-mark {
+            background: var(--ink);
+            color: var(--paper);
+        }
+
+        .brand-mark {
+            display: grid;
+            place-items: center;
+            width: 2.1rem;
+            height: 2.1rem;
+            border: 1px solid var(--ink);
+            border-radius: 50%;
+            font-family: "Inter", sans-serif;
+            font-size: 0.78rem;
+            letter-spacing: 0;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.45rem;
+            width: 100%;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-button {
+            appearance: none;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            font: 700 0.72rem/1 "Inter", sans-serif;
+            letter-spacing: 0.09em;
+            min-height: 2.45rem;
+            padding: 0 0.9rem;
+            text-transform: uppercase;
+            transition: color 180ms ease, background 180ms ease, border-color 180ms ease;
+            white-space: nowrap;
+        }
+
+        .nav-button:hover,
+        .nav-button.active {
+            background: var(--ink);
+            border-color: var(--ink);
+            color: var(--paper);
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: pageIn 420ms ease both;
+        }
+
+        @keyframes pageIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero {
+            position: relative;
+            display: grid;
+            grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.75fr);
+            gap: clamp(2rem, 5vw, 5rem);
+            min-height: calc(100vh - 5rem);
+            padding: clamp(3rem, 7vw, 7rem) clamp(1.25rem, 6vw, 6rem) 4rem;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            right: clamp(1rem, 5vw, 5rem);
+            bottom: 2rem;
+            width: min(44vw, 34rem);
+            height: 1px;
+            background: var(--ink);
+            opacity: 0.28;
+        }
+
+        .eyebrow,
+        .chapter-kicker,
+        .label {
+            margin: 0 0 1rem;
+            color: var(--muted);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        .display-title {
+            max-width: 12ch;
+            margin: 1rem;
+            font-family: "Cormorant Garamond", serif;
+            font-size: 10rem;
+            font-weight: 600;
+            letter-spacing: 0;
+            line-height: 0.74;
+            padding-bottom: 1rem;
+        }
+
+        .hero-copy {
+            align-self: end;
+            max-width: 45rem;
+        }
+
+        .lead {
+            max-width: 58rem;
+            margin: 1.3rem 0 0;
+            color: var(--muted);
+            font-size: clamp(1rem, 1.5vw, 1.16rem);
+            line-height: 1.8;
+        }
+
+        .hero-visual {
+            position: relative;
+            align-self: center;
+            min-height: 34rem;
+        }
+
+        .portrait-card,
+        .matrix-card,
+        .stat-card,
+        .floating-note {
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .portrait-card {
+            position: absolute;
+            inset: 2rem 1rem auto auto;
+            width: min(100%, 23rem);
+            min-height: 26rem;
+            padding: 2rem;
+            background: var(--beige);
+        }
+
+        .matrix-art {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.48rem;
+            margin-top: 2.2rem;
+        }
+
+        .matrix-art span {
+            aspect-ratio: 1;
+            border: 1px solid rgba(35, 33, 31, 0.22);
+            background: rgba(255, 250, 240, 0.45);
+        }
+
+        .matrix-art span:nth-child(3n) {
+            background: var(--lavender);
+        }
+
+        .matrix-art span:nth-child(4n) {
+            background: var(--sage);
+        }
+
+        .matrix-card {
+            position: absolute;
+            left: 0;
+            bottom: 3rem;
+            width: min(80%, 19rem);
+            padding: 1.2rem;
+            background: var(--paper);
+        }
+
+        .formula {
+            font-family: "Fira Code", monospace;
+            font-size: 0.9rem;
+            line-height: 1.65;
+        }
+
+        .stat-card {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 13rem;
+            padding: 1.1rem;
+            background: var(--slate);
+            color: #fffaf0;
+        }
+
+        .stat-card strong {
+            display: block;
+            font-family: "Cormorant Garamond", serif;
+            font-size: 3rem;
+            line-height: 1;
+        }
+
+        .section {
+            padding: clamp(3.5rem, 7vw, 6.5rem) clamp(1.25rem, 6vw, 6rem);
+        }
+
+        .section.alt {
+            background: rgba(216, 196, 184, 0.48);
+        }
+
+        .section.slate {
+            background: var(--slate);
+            color: var(--paper);
+        }
+
+        .section.sage {
+            background: var(--sage);
+        }
+
+        .section-header {
+            display: grid;
+            grid-template-columns: minmax(0, 0.65fr) minmax(280px, 1fr);
+            gap: clamp(1.5rem, 4vw, 4rem);
+            align-items: end;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            margin: 0;
+            font-family: "Cormorant Garamond", serif;
+            font-size: clamp(2.7rem, 6vw, 6.5rem);
+            font-weight: 600;
+            letter-spacing: 0;
+            line-height: 0.92;
+        }
+
+        .section-text {
+            margin: 0;
+            color: var(--muted);
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .slate .section-text,
+        .slate .eyebrow,
+        .slate .chapter-kicker {
+            color: rgba(255, 250, 240, 0.78);
+        }
+
+        .grid-2,
+        .grid-3,
+        .grid-4 {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .card,
+        .lab-card,
+        .team-card,
+        .chapter-card,
+        .code-card {
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: rgba(255, 250, 240, 0.82);
+            box-shadow: 0 1px 0 rgba(255, 250, 240, 0.8);
+        }
+
+        .card {
+            padding: clamp(1.2rem, 2vw, 1.8rem);
+        }
+
+        .card.lavender {
+            background: var(--lavender);
+        }
+
+        .card.peach {
+            background: var(--peach);
+        }
+
+        .card.sage-soft {
+            background: rgba(168, 188, 183, 0.62);
+        }
+
+        .card h3,
+        .card h4,
+        .lab-card h3,
+        .team-card h3 {
+            margin: 0 0 0.7rem;
+            font-family: "Cormorant Garamond", serif;
+            font-size: clamp(1.45rem, 2vw, 2rem);
+            line-height: 1;
+        }
+
+        .card p,
+        .lab-card p,
+        .team-card p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.96rem;
+            line-height: 1.7;
+        }
+
+        .slate .card p,
+        .slate .team-card p {
+            color: rgba(35, 33, 31, 0.72);
+        }
+
+        .badge-grid {
+            margin-top: 2rem;
+        }
+
+        .profile-badge {
+            padding: 1rem;
+            border-top: 1px solid var(--line);
+        }
+
+        .profile-badge span {
+            display: block;
+            color: var(--muted);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .profile-badge strong {
+            display: block;
+            margin-top: 0.45rem;
+            font-family: "Cormorant Garamond", serif;
+            font-size: 1.35rem;
+            line-height: 1.05;
+        }
+
+        .skill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+            margin-top: 1rem;
+        }
+
+        .skill-tag {
+            border: 1px solid var(--line);
+            background: rgba(255, 250, 240, 0.68);
+            border-radius: 999px;
+            color: var(--muted);
+            font-size: 0.83rem;
+            font-weight: 600;
+            padding: 0.48rem 0.75rem;
+        }
+
+        .chapters-layout {
+            display: grid;
+            grid-template-columns: 15rem minmax(0, 1fr);
+            gap: clamp(1.5rem, 4vw, 3rem);
+            align-items: start;
+        }
+
+        .chapter-index {
+            position: sticky;
+            top: 5.5rem;
+            display: grid;
+            gap: 0.45rem;
+            padding: 1rem;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: rgba(255, 250, 240, 0.76);
+        }
+
+        .chapter-index button {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 2.3rem;
+            padding: 0 0.7rem;
+            border: 0;
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-decoration: none;
+            text-transform: uppercase;
+            text-align: left;
+        }
+
+        .chapter-index button:hover,
+        .chapter-index button.active {
+            background: var(--ink);
+            color: var(--paper);
+        }
+
+        .chapter-card {
+            display: none;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            background: rgba(255, 250, 240, 0.78);
+        }
+
+        .chapter-card.active {
+            display: block;
+            animation: pageIn 360ms ease both;
+        }
+
+        .chapter-hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(220px, 0.45fr);
+            gap: 1.5rem;
+            padding: clamp(1.5rem, 4vw, 3rem);
+            background: linear-gradient(135deg, rgba(242, 240, 221, 0.96), rgba(220, 207, 229, 0.48));
+        }
+
+        .chapter-card:nth-child(even) .chapter-hero {
+            background: linear-gradient(135deg, rgba(168, 188, 183, 0.55), rgba(255, 250, 240, 0.9));
+        }
+
+        .chapter-number {
+            align-self: start;
+            justify-self: end;
+            display: grid;
+            place-items: center;
+            width: 7.5rem;
+            height: 7.5rem;
+            border: 1px solid var(--line);
+            border-radius: 50%;
+            color: rgba(35, 33, 31, 0.42);
+            font-family: "Cormorant Garamond", serif;
+            font-size: 4rem;
+        }
+
+        .chapter-heading {
+            margin: 0;
+            font-family: "Cormorant Garamond", serif;
+            font-size: clamp(2.4rem, 5vw, 5.6rem);
+            font-weight: 600;
+            line-height: 0.92;
+        }
+
+        .chapter-body {
+            padding: clamp(1.2rem, 3vw, 2rem);
+        }
+
+        .math-block {
+            display: grid;
+            place-items: center;
+            min-height: 4.1rem;
+            margin: 1rem 0 0;
+            padding: 1rem;
+            border: 1px solid var(--line);
+            border-left: 4px solid var(--ink);
+            border-radius: var(--radius);
+            background: rgba(255, 250, 240, 0.75);
+            overflow-x: auto;
+        }
+
+        .outcome-list {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.8rem;
+            margin: 1.25rem 0 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .outcome-list li {
+            min-height: 100%;
+            padding: 1rem;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: rgba(242, 240, 221, 0.62);
+            color: var(--muted);
+            font-size: 0.92rem;
+            line-height: 1.55;
+        }
+
+        .outcome-list i {
+            margin-right: 0.4rem;
+            color: var(--sage);
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: rgba(255, 250, 240, 0.86);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 44rem;
+        }
+
+        th,
+        td {
+            padding: 0.95rem;
+            border-bottom: 1px solid var(--line);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: rgba(216, 196, 184, 0.54);
+            font-size: 0.76rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        td {
+            color: var(--muted);
+            font-size: 0.92rem;
+            line-height: 1.55;
+        }
+
+        tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .lab-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .lab-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 17rem;
+            padding: 1.35rem;
+            background: rgba(255, 250, 240, 0.78);
+            transition: transform 180ms ease, box-shadow 180ms ease;
+        }
+
+        .lab-card:hover {
+            box-shadow: var(--shadow);
+            transform: translateY(-4px);
+        }
+
+        .lab-card:nth-child(3n+1) {
+            background: var(--ivory);
+        }
+
+        .lab-card:nth-child(3n+2) {
+            background: var(--lavender);
+        }
+
+        .lab-card:nth-child(3n) {
+            background: var(--peach);
+        }
+
+        .icon-line {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            color: var(--muted);
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .button-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.55rem;
+            width: fit-content;
+            min-height: 2.65rem;
+            margin-top: 1.2rem;
+            padding: 0 1rem;
+            border: 1px solid var(--ink);
+            background: var(--ink);
+            color: var(--paper);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+
+        .button-link.secondary {
+            background: transparent;
+            color: var(--ink);
+        }
+
+        .project-showcase {
+            display: grid;
+            grid-template-columns: minmax(0, 0.85fr) minmax(280px, 1fr);
+            gap: clamp(1.5rem, 4vw, 4rem);
+            align-items: center;
+        }
+
+        .project-frame {
+            position: relative;
+            min-height: 32rem;
+        }
+
+        .project-frame::before {
+            content: "";
+            position: absolute;
+            inset: 2.5rem 0 0 2rem;
+            border: 1px solid rgba(35, 33, 31, 0.35);
+        }
+
+        .floating-note {
+            position: absolute;
+            z-index: 2;
+            background: var(--paper);
+            padding: 1.2rem;
+        }
+
+        .floating-note.large {
+            inset: 0 auto auto 0;
+            width: min(86%, 28rem);
+            background: var(--lavender);
+        }
+
+        .floating-note.small {
+            right: 0;
+            bottom: 1.5rem;
+            width: min(70%, 18rem);
+            background: var(--sage);
+        }
+
+        .floating-note h3 {
+            margin: 0 0 0.5rem;
+            font-family: "Cormorant Garamond", serif;
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .floating-note p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+
+        .team-card {
+            padding: 1.25rem;
+        }
+
+        .team-card span {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--muted);
+            font-family: "Fira Code", monospace;
+            font-size: 0.82rem;
+        }
+
+        .code-card {
+            padding: 1.25rem;
+            background: #24211f;
+            color: #fffaf0;
+            font-family: "Fira Code", monospace;
+            font-size: 0.86rem;
+            line-height: 1.75;
+            overflow-x: auto;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 2rem clamp(1.25rem, 6vw, 6rem);
+            border-top: 1px solid var(--line);
+            background: var(--ink);
+            color: rgba(255, 250, 240, 0.76);
+            font-size: 0.84rem;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 650ms ease, transform 650ms ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 1000px) {
+            .hero,
+            .section-header,
+            .chapters-layout,
+            .project-showcase {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                min-height: auto;
+            }
+
+            .hero-visual {
+                min-height: 30rem;
+            }
+
+            .chapter-index {
+                position: static;
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .grid-3,
+            .grid-4,
+            .lab-grid,
+            .outcome-list {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 720px) {
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .nav {
+                justify-content: flex-start;
+            }
+
+            .hero-visual {
+                min-height: 25rem;
+            }
+
+            .portrait-card {
+                inset: 0 0 auto auto;
+                width: 86%;
+            }
+
+            .matrix-card {
+                width: 74%;
+            }
+
+            .stat-card {
+                width: 10rem;
+            }
+
+            .grid-2,
+            .grid-3,
+            .grid-4,
+            .lab-grid,
+            .outcome-list,
+            .chapter-hero,
+            .chapter-index {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .chapter-number {
+                justify-self: start;
+                width: 5.5rem;
+                height: 5.5rem;
+                font-size: 3rem;
+            }
+
+            .display-title {
+                font-size: clamp(4.2rem, 20vw, 7rem);
+            }
+
+            .footer {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <button class="brand" type="button" aria-label="Open introduction page" data-home="intro">
+            <span class="brand-mark">KS</span>
+            <span>Kartik Shivshetty</span>
+        </button>
+        <nav class="nav" aria-label="Portfolio pages">
+            <button class="nav-button active" type="button" data-page="intro">Intro</button>
+            <button class="nav-button" type="button" data-page="chapters">Chapters</button>
+            <button class="nav-button" type="button" data-page="labs">Lab Experiments</button>
+            <button class="nav-button" type="button" data-page="project">Project</button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="page active" id="intro">
+            <div class="hero">
+                <div class="hero-copy reveal">
+                    <p class="eyebrow">Academic profile / CSE portfolio</p>
+                    <h1 class="display-title">Linear Algebra.</h1>
+                    <p class="lead">I am <b>Kartik Shivshetty </b> a Computer Science and Engineering student with a deep interest in embedded architectures, machine learning frameworks, robotics, and clean-stack software engineering. I focus on bridging physics-layer hardware platforms with intelligent compute ecosystems to build innovative, functional solutions.</p>
+                </div>
+                <div class="hero-visual reveal" aria-label="Decorative matrix portfolio artwork">
+                    <div class="portrait-card">
+                        <p class="eyebrow">KLE Technological University</p>
+                        <div class="matrix-art" aria-hidden="true">
+                            <span></span><span></span><span></span><span></span><span></span>
+                            <span></span><span></span><span></span><span></span><span></span>
+                            <span></span><span></span><span></span><span></span><span></span>
+                            <span></span><span></span><span></span><span></span><span></span>
+                            <span></span><span></span><span></span><span></span><span></span>
+                        </div>
+                    </div>
+                    <div class="matrix-card">
+                        <p class="label">Portfolio thesis</p>
+                        <div class="formula">vectors -> matrices<br>systems -> spaces<br>SVD -> compression</div>
+                    </div>
+                    <div class="stat-card">
+                    
+                        <span>Portfolio</span>
+                    </div>
+                </div>
+            </div>
+
+            <section class="section alt">
+                <div class="section-header reveal">
+                    <div>
+                        <p class="eyebrow">Profile</p>
+                        <h2 class="section-title">Academic identity</h2>
+                    </div>
+                    <p class="section-text">This portfolio combines the profile page, six linear algebra chapters, laboratory experiments, and the final SVD audio compression project into a single refined document with page-style navigation.</p>
+                </div>
+                <div class="grid-4 badge-grid reveal">
+                    <div class="profile-badge"><span>University</span><strong>KLE Technological University</strong></div>
+                    <div class="profile-badge"><span>University USN</span><strong>01FE25BCS387</strong></div>
+                    <div class="profile-badge"><span>Division Roll No</span><strong>632</strong></div>
+                    <div class="profile-badge"><span>Specialization</span><strong>Embedded + AI + Robotics</strong></div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="grid-2 reveal">
+                    <div class="card lavender">
+                        <h3><i class="fa-solid fa-microchip"></i> Engineering Focus</h3>
+                        <p>Passionate about hands-on implementation and rapid embedded prototyping. Specializes in designing robust systems utilizing microcontrollers to engineer end-to-end solutions spanning automation networks, precision sensor integration loops, and intelligent voice-processing logic controllers.</p>
+                    </div>
+                    <div class="card peach">
+                        <h3><i class="fa-solid fa-brain"></i> Analytical Approach</h3>
+                        <p>Maintains a systematic, logical paradigm toward problem solving and structural code optimization. Highly effective in troubleshooting real-time hardware constraints, analyzing algorithmic complexities, and operating within cross-functional peer-review spaces.</p>
+                    </div>
+                </div>
+                <div class="grid-2 reveal">
+                    <div class="card">
+                        <h3>Hardware &amp; Programming</h3>
+                        <div class="skill-list">
+                            <span class="skill-tag">C and Python Programming</span>
+                            <span class="skill-tag">Arduino &amp; ESP32 Development</span>
+                            <span class="skill-tag">Embedded Systems &amp; IoT Architecture</span>
+                            <span class="skill-tag">Sensor Integration Frameworks</span>
+                            <span class="skill-tag">Industrial Automation Systems</span>
+                        </div>
+                    </div>
+                    <div class="card sage-soft">
+                        <h3>Core Competencies</h3>
+                        <div class="skill-list">
+                            <span class="skill-tag">AI Assistant Development</span>
+                            <span class="skill-tag">Robotics Foundations</span>
+                            <span class="skill-tag">Logic Debugging &amp; Systems Analysis</span>
+                            <span class="skill-tag">Collaborative Technical Workflows</span>
+                            <span class="skill-tag">High-Level Technical Documentation</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <section class="page" id="chapters">
+            <section class="section">
+                <div class="section-header reveal">
+                    <div>
+                        <p class="eyebrow">Course chapters</p>
+                        <h2 class="section-title">Linear algebra notebook</h2>
+                    </div>
+                    <p class="section-text">Each chapter is kept as a distinct editorial panel so the merged file still behaves like multiple pages. Use the chapter index for quick movement inside the section.</p>
+                </div>
+
+                <div class="chapters-layout">
+                    <aside class="chapter-index reveal" aria-label="Chapter index">
+                        <button class="chapter-button active" type="button" data-chapter="chapter-1">Chapter 1 <i class="fa-solid fa-up-right-from-square"></i></button>
+                        <button class="chapter-button" type="button" data-chapter="chapter-2">Chapter 2 <i class="fa-solid fa-up-right-from-square"></i></button>
+                        <button class="chapter-button" type="button" data-chapter="chapter-3">Chapter 3 <i class="fa-solid fa-up-right-from-square"></i></button>
+                        <button class="chapter-button" type="button" data-chapter="chapter-4">Chapter 4 <i class="fa-solid fa-up-right-from-square"></i></button>
+                        <button class="chapter-button" type="button" data-chapter="chapter-5">Chapter 5 <i class="fa-solid fa-up-right-from-square"></i></button>
+                        <button class="chapter-button" type="button" data-chapter="chapter-6">Chapter 6 <i class="fa-solid fa-up-right-from-square"></i></button>
+                    </aside>
+
+                    <div>
+                        <article class="chapter-card reveal active" id="chapter-1">
+                            <div class="chapter-hero">
+                                <div>
+                                    <p class="chapter-kicker">Module 01</p>
+                                    <h2 class="chapter-heading">Data as Vectors</h2>
+                                    <p class="lead">Exploring spatial dimensions, pixel configuration mapping systems, matrix foundations, and the core linear algebraic frameworks driving AI models and recommendation algorithms.</p>
+                                </div>
+                                <div class="chapter-number">01</div>
+                            </div>
+                            <div class="chapter-body">
+                                <div class="grid-2">
+                                    <div class="card">
+                                        <h3>Mathematical Data Elements</h3>
+                                        <p>Raw metrics are structured into vectors and multidimensional matrices, enabling algorithms to process large computational systems efficiently.</p>
+                                    </div>
+                                    <div class="card lavender">
+                                        <h3>Vector Structures</h3>
+                                        <p>An ordered structure of scalar values contained within a unified orientation framework for coordinate transforms, directional tracking, and neural features.</p>
+                                    </div>
+                                </div>
+                                <div class="grid-2">
+                                    <div class="card">
+                                        <h3>Column Vectors</h3>
+                                        <p>Ordered arrays stacked vertically for graphics coordinates, global linear equations, and AI backpropagation passes.</p>
+                                        <div class="math-block">$$C = \begin{bmatrix} 4 \\ 5 \\ 6 \end{bmatrix}$$</div>
+                                    </div>
+                                    <div class="card">
+                                        <h3>Row Vectors</h3>
+                                        <p>Elements structured horizontally across a single dimensional line, often used as database rows and machine learning feature sets.</p>
+                                        <div class="math-block">$$R = \begin{bmatrix} 1 & 2 & 3 \end{bmatrix}$$</div>
+                                    </div>
+                                    <div class="card peach">
+                                        <h3>Scalar Operations</h3>
+                                        <p>Multiplying by a scalar changes magnitude while preserving the vector's fundamental alignment.</p>
+                                        <div class="math-block">$$3 \times \begin{bmatrix} 1 & 2 \end{bmatrix} = \begin{bmatrix} 3 & 6 \end{bmatrix}$$</div>
+                                    </div>
+                                    <div class="card sage-soft">
+                                        <h3>Dot Product Kernel</h3>
+                                        <p>The dot product measures alignment across corresponding indices and supports similarity calculations.</p>
+                                        <div class="math-block">$$A \cdot B = \sum_{i=1}^n a_i b_i$$</div>
+                                    </div>
+                                </div>
+                                <div class="table-wrapper">
+                                    <table>
+                                        <thead>
+                                            <tr><th>Acoustic Identifier Vector</th><th>Tempo Weighting</th><th>Energy Signatures</th><th>Danceability Coefficient</th></tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>Track Alpha ($\vec{A}$)</td><td>80</td><td>70</td><td>90</td></tr>
+                                            <tr><td>Track Beta ($\vec{B}$)</td><td>78</td><td>68</td><td>88</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <ul class="outcome-list">
+                                    <li><i class="fa-solid fa-circle-check"></i>Structured high-dimensional observations utilizing matrix layouts.</li>
+                                    <li><i class="fa-solid fa-circle-check"></i>Mastered operations linking spatial scales across column and row configurations.</li>
+                                    <li><i class="fa-solid fa-circle-check"></i>Decoded directional vector trajectories using the Euclidean norm.</li>
+                                </ul>
+                            </div>
+                        </article>
+
+                        <article class="chapter-card reveal" id="chapter-2">
+                            <div class="chapter-hero">
+                                <div>
+                                    <p class="chapter-kicker">Module 02</p>
+                                    <h2 class="chapter-heading">Matrices as System Operators</h2>
+                                    <p class="lead">Examining matrices as programmatic operators that manipulate vector fields, execute spatial compositions, scale pixel matrices, and drive image configuration systems.</p>
+                                </div>
+                                <div class="chapter-number">02</div>
+                            </div>
+                            <div class="chapter-body">
+                                <div class="grid-2">
+                                    <div class="card">
+                                        <h3>Dynamic Mapping Systems</h3>
+                                        <p>A matrix functions as an active operator. Multiplying an incoming vector by a matrix modifies spatial coordinates and converts inputs into targeted outputs: $Ax=b$.</p>
+                                    </div>
+                                    <div class="card lavender">
+                                        <h3>Operational Actions</h3>
+                                        <p>Matrices rotate fields, scale objects, mirror axes, and stretch transformations across computer graphics landscapes.</p>
+                                    </div>
+                                    <div class="card peach">
+                                        <h3>Angular Rotation</h3>
+                                        <p>Rotates target points about the origin through an angle $\theta$, useful in robotics mechanics and navigation tracking.</p>
+                                        <div class="math-block">$$R(\theta) = \begin{bmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{bmatrix}$$</div>
+                                    </div>
+                                    <div class="card sage-soft">
+                                        <h3>Shearing Deformation</h3>
+                                        <p>Slants spatial bounds along a fixed axis by applying a multiplier $k$, foundational for text and shape deformation.</p>
+                                        <div class="math-block">$$S_{horizontal} = \begin{bmatrix} 1 & k \\ 0 & 1 \end{bmatrix}$$</div>
+                                    </div>
+                                </div>
+                                <ul class="outcome-list">
+                                    <li><i class="fa-solid fa-circle-check"></i>Conceptualized matrices as system operators rather than static numeric grids.</li>
+                                    <li><i class="fa-solid fa-circle-check"></i>Mapped monochromatic image data structures using intensity matrices.</li>
+                                    <li><i class="fa-solid fa-circle-check"></i>Applied compounding transformations using operator matrix composition laws.</li>
+                                </ul>
+                            </div>
+                        </article>
+
+                        <article class="chapter-card reveal" id="chapter-3">
+                            <div class="chapter-hero">
+                                <div>
+                                    <p class="chapter-kicker">Module 03</p>
+                                    <h2 class="chapter-heading">Solving Systems of Linear Equations</h2>
+                                    <p class="lead">Analyzing computational methods to resolve concurrent algebraic constraints, row echelon spaces, and LU factorization models within machine learning engines.</p>
+                                </div>
+                                <div class="chapter-number">03</div>
+                            </div>
+                            <div class="chapter-body">
+                                <div class="grid-2">
+                                    <div class="card">
+                                        <h3>First-Order Equations</h3>
+                                        <p>A linear function establishes relationship arrays where all variables have power one and sketch uniform paths through space.</p>
+                                        <div class="math-block">$$ax + by = c$$</div>
+                                    </div>
+                                    <div class="card lavender">
+                                        <h3>Simultaneous Constraints</h3>
+                                        <p>Systems of linear equations cluster independent operational lines and require solving for variables that satisfy all statements synchronously.</p>
+                                    </div>
+                                    <div class="card peach">
+                                        <h3>Row Echelon Form</h3>
+                                        <p>Zero rows are pushed downward and each leading pivot shifts progressively rightward with zeros beneath it.</p>
+                                        <div class="math-block">$$\begin{bmatrix} 1 & 2 & 3 \\ 0 & 1 & 4 \\ 0 & 0 & 2 \end{bmatrix}$$</div>
+                                    </div>
+                                    <div class="card sage-soft">
+                                        <h3>Reduced Row Echelon Form</h3>
+                                        <p>Scales leading pivots to one and clears non-zero values both above and below each pivot.</p>
+                                        <div class="math-block">$$\begin{bmatrix} 1 & 0 & 2 \\ 0 & 1 & 3 \\ 0 & 0 & 0 \end{bmatrix}$$</div>
+                                    </div>
+                                </div>
+                                <ul class="outcome-list">
+                                    <li><i class="fa-solid fa-circle-check"></i>Formulated multi-variable relationships using packed matrix systems.</li>
+                                    <li><i class="fa-solid fa-circle-check"></i>Executed variable clearance operations using Gaussian row operations.</li>
+                                    <li><i class="fa-solid fa-circle-check"></i>Decomposed compound structural matrices using fast LU factorization steps.</li>
+                                </ul>
+                            </div>
+                        </article>
+
+                        <article class="chapter-card reveal" id="chapter-4">
+                            <div class="chapter-hero">
+                                <div>
+                                    <p class="chapter-kicker">Module 04</p>
+                                    <h2 class="chapter-heading">Vector Spaces: Degrees of Freedom</h2>
+                                    <p class="lead">Investigating vector spaces, validation axioms, coordinate subspaces, rank configurations, and structural degrees of freedom in robotic systems.</p>
+                                </div>
+                                <div class="chapter-number">04</div>
+                            </div>
+                            <div class="chapter-body">
+                                <div class="grid-2">
+                                    <div class="card">
+                                        <h3>Closure Under Addition</h3>
+                                        <p>Combining any two vectors within the defined space boundary must result in another enclosed vector.</p>
+                                        <div class="math-block">$$u + v \in V$$</div>
+                                    </div>
+                                    <div class="card lavender">
+                                        <h3>Closure Under Scalar Scaling</h3>
+                                        <p>Scaling an internal vector by any real scalar cannot move the product outside the vector domain boundary.</p>
+                                        <div class="math-block">$$c \cdot v \in V$$</div>
+                                    </div>
+                                    <div class="card peach">
+                                        <h3>Column Space</h3>
+                                        <p>The span generated across all vertical matrix columns, describing the full set of achievable outputs.</p>
+                                        <div class="math-block">$$\text{Dim} = \text{Rank}(A)$$</div>
+                                    </div>
+                                    <div class="card sage-soft">
+                                        <h3>Null Space</h3>
+                                        <p>All incoming vectors that compress to the zero vector during transformation, representing data lost by the system.</p>
+                                        <div class="math-block">$$\text{Dim} = n - \text{Rank}(A)$$</div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <h3>Rank-Nullity Balancing Theorem</h3>
+                                    <p>The total input dimension splits into active processing directions and muted redundant lines.</p>
+                                    <div class="math-block">$$\text{Rank}(A) + \text{Nullity}(A) = n$$</div>
+                                </div>
+                                <ul class="outcome-list">
+                                    <li><i class="fa-solid fa-circle-check"></i>Verified matrix rank configurations and pivot spaces.</li>
+                                    <li><i class="fa-solid fa-circle-check"></i>Classified system behavior through fundamental subspaces.</li>
+                                    <li><i class="fa-solid fa-circle-check"></i>Applied matrix mathematics to circuits, optimization networks, and ML models.</li>
+                                </ul>
+                            </div>
+                        </article>
+
+                        <article class="chapter-card reveal" id="chapter-5">
+                            <div class="chapter-hero">
+                                <div>
+                                    <p class="chapter-kicker">Module 05</p>
+                                    <h2 class="chapter-heading">Orthogonality</h2>
+                                    <p class="lead">Formulating non-redundant spatial processing metrics, dot-product kernels, Gram-Schmidt orthonormalization, QR factorization, and Least Squares systems.</p>
+                                </div>
+                                <div class="chapter-number">05</div>
+                            </div>
+                            <div class="chapter-body">
+                                <div class="grid-2">
+                                    <div class="card">
+                                        <h3>Dot Product Alignment</h3>
+                                        <p>A zero scalar result implies complete directional independence with zero spatial overlap.</p>
+                                        <div class="math-block">$$u \cdot v = \sum_{i=1}^n u_i v_i = \|u\|\|v\|\cos\theta$$</div>
+                                    </div>
+                                    <div class="card lavender">
+                                        <h3>Euclidean Magnitude</h3>
+                                        <p>Derives absolute distance in multidimensional coordinate fields through self-dot integration.</p>
+                                        <div class="math-block">$$\|u\| = \sqrt{u \cdot u}$$</div>
+                                    </div>
+                                    <div class="card peach">
+                                        <h3>Linear Projection Scaling</h3>
+                                        <p>Maps the component span of a vector onto the trajectory line specified by another target vector.</p>
+                                        <div class="math-block">$$\text{proj}_u(v) = \left( \frac{v \cdot u}{u \cdot u} \right) u$$</div>
+                                    </div>
+                                    <div class="card sage-soft">
+                                        <h3>Least Squares</h3>
+                                        <p>Used when overdetermined structural data systems do not have exact intersecting solutions.</p>
+                                        <div class="math-block">$$A^T A \hat{x} = A^T b$$</div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <h3>QR Factorization Architecture</h3>
+                                    <p>Breaks matrix $A$ into an orthogonal rotation component $Q$ and an upper triangular scaling matrix $R$.</p>
+                                    <div class="math-block">$$A = Q \cdot R$$</div>
+                                </div>
+                                <div class="table-wrapper">
+                                    <table>
+                                        <thead>
+                                            <tr><th>Technical Subfield</th><th>Orthogonal System Implementations</th></tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td><strong>Robotics Engineering</strong></td><td>Using orthonormal orientation frames to process sensor calibration metrics and paths.</td></tr>
+                                            <tr><td><strong>Machine Learning Prototyping</strong></td><td>Eliminating redundant input attributes through independent tracking filters.</td></tr>
+                                            <tr><td><strong>Autonomous Navigation Systems</strong></td><td>Executing position approximations for drones via localized least squares projections.</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <ul class="outcome-list">
+                                    <li><i class="fa-solid fa-circle-check"></i>Measured spatial alignment using generalized dot product calculations.</li>
+                                    <li><i class="fa-solid fa-circle-check"></i>Generated normalized perpendicular coordinate fields using Gram-Schmidt.</li>
+                                    <li><i class="fa-solid fa-circle-check"></i>Resolved overdetermined data via Least Squares configurations.</li>
+                                </ul>
+                            </div>
+                        </article>
+
+                        <article class="chapter-card reveal" id="chapter-6">
+                            <div class="chapter-hero">
+                                <div>
+                                    <p class="chapter-kicker">Module 06</p>
+                                    <h2 class="chapter-heading">Eigenvalues and Eigenvectors</h2>
+                                    <p class="lead">Decoding rigid transformation matrices, invariant lines, characteristic polynomial values, diagonalization operations, and Markov distribution loops.</p>
+                                </div>
+                                <div class="chapter-number">06</div>
+                            </div>
+                            <div class="chapter-body">
+                                <div class="grid-2">
+                                    <div class="card">
+                                        <h3>Invariant Trajectories</h3>
+                                        <p>During spatial transformations, certain pathways preserve orientation while stretching or compressing along the same line.</p>
+                                    </div>
+                                    <div class="card lavender">
+                                        <h3>Eigenvalue Identity</h3>
+                                        <p>Applying matrix $A$ to eigenvector $X$ yields the same result as scaling the vector by $\lambda$.</p>
+                                        <div class="math-block">$$A X = \lambda X$$</div>
+                                    </div>
+                                    <div class="card peach">
+                                        <h3>Characteristic Equation</h3>
+                                        <p>Extracts active stretching scalar coefficients by solving a determinant polynomial.</p>
+                                        <div class="math-block">$$\det(A - \lambda I) = 0$$</div>
+                                    </div>
+                                    <div class="card sage-soft">
+                                        <h3>Matrix Diagonalization</h3>
+                                        <p>Transforms coupled maps into an independent diagonal framework built from distinct eigenvalues.</p>
+                                        <div class="math-block">$$A = P D P^{-1} \implies A^n = P D^n P^{-1}$$</div>
+                                    </div>
+                                </div>
+                                <div class="table-wrapper">
+                                    <table>
+                                        <thead>
+                                            <tr><th>Algorithmic Core Concept</th><th>Linear Algebraic Operation</th><th>System Implementation Metric</th></tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td><strong>Network Influence Mapping</strong></td><td>Dominant Eigenvector Isolation</td><td>Identifies central information hubs across nodes.</td></tr>
+                                            <tr><td><strong>Stochastic Probability Chains</strong></td><td>Markov State Matrix Loops</td><td>Models user click patterns across pages over time.</td></tr>
+                                            <tr><td><strong>Iterative Power Sequences</strong></td><td>Repeated Operator Approximations</td><td>Computes massive web-scale ranking arrays efficiently.</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="card">
+                                    <h3>Matrix Execution Sandbox</h3>
+                                    <p>Given $A = \begin{bmatrix} 4 & 0 \\ 0 & 2 \end{bmatrix}$, the characteristic constraint isolates $\lambda_1 = 4$ and $\lambda_2 = 2$.</p>
+                                    <div class="math-block">$$\det\begin{bmatrix} 4-\lambda & 0 \\ 0 & 2-\lambda \end{bmatrix} = 0$$</div>
+                                </div>
+                                <ul class="outcome-list">
+                                    <li><i class="fa-solid fa-circle-check"></i>Trapped unrotated transformation pathways using invariant coordinates.</li>
+                                    <li><i class="fa-solid fa-circle-check"></i>Optimized computation by breaking complex layouts via matrix diagonalization.</li>
+                                    <li><i class="fa-solid fa-circle-check"></i>Tracked long-term stability using Markov probability matrices.</li>
+                                </ul>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <section class="page" id="labs">
+            <section class="section sage">
+                <div class="section-header reveal">
+                    <div>
+                        <p class="eyebrow">Practical journal</p>
+                        <h2 class="section-title">Lab experiments</h2>
+                    </div>
+                    <p class="section-text">A compilation of computational matrix laboratory work, execution scripts, and verified numerical results exploring core Linear Algebra applications.</p>
+                </div>
+                <div class="lab-grid reveal">
+                    <article class="lab-card">
+                        <div>
+                            <p class="icon-line"><i class="fa-solid fa-code"></i> Lab Experiment 1</p>
+                            <h3>Vector Foundations</h3>
+                            <p>Vector definitions, basic vector structures, matrix declarations, scalar values, and basic dimensions.</p>
+                        </div>
+                        <a class="button-link secondary" href="https://colab.research.google.com/drive/19fm4u7K6n7cAk-BeUrFENE_O7Q373OvS?usp=drive_link" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Lab</a>
+                    </article>
+                    <article class="lab-card">
+                        <div>
+                            <p class="icon-line"><i class="fa-solid fa-code"></i> Lab Experiment 2</p>
+                            <h3>Dot Products</h3>
+                            <p>Dot product calculations, matrix-vector multiplications, linearity checking operations, and similarity proofs.</p>
+                        </div>
+                        <a class="button-link secondary" href="https://colab.research.google.com/drive/1LHhTT2l6FBMruML_th8w7szo1BXC9SgB?usp=drive_link" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Lab</a>
+                    </article>
+                    <article class="lab-card">
+                        <div>
+                            <p class="icon-line"><i class="fa-solid fa-code"></i> Lab Experiment 3</p>
+                            <h3>Transformations</h3>
+                            <p>Linear mapping properties, matrix composition transformations, shearing configurations, and coordinate rotation algorithms.</p>
+                        </div>
+                        <a class="button-link secondary" href="https://colab.research.google.com/drive/1_IViUdsTt2wXEQ_qlKKBJRy4pqt3QwHn?usp=drive_link" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Lab</a>
+                    </article>
+                    <article class="lab-card">
+                        <div>
+                            <p class="icon-line"><i class="fa-solid fa-code"></i> Lab Experiment 4</p>
+                            <h3>Gaussian Elimination</h3>
+                            <p>Augmented matrix architectures, structural rank configurations, pivot evaluation patterns, and Gaussian elimination methods.</p>
+                        </div>
+                        <a class="button-link secondary" href="https://colab.research.google.com/drive/1EmfED5OhgZT9BI8TXTjDfWTpD3wVA6un?usp=drive_link" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Lab</a>
+                    </article>
+                    <article class="lab-card">
+                        <div>
+                            <p class="icon-line"><i class="fa-solid fa-code"></i> Lab Experiment 5</p>
+                            <h3>Subspaces</h3>
+                            <p>Decomposition pipelines, matrix inversion modeling, structural subspace spans, and testing for linear independence.</p>
+                        </div>
+                        <a class="button-link secondary" href="https://colab.research.google.com/drive/1UJi9UgW9Xwq2h5MecbrCVgKn08CGu6Lp?usp=drive_link" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Lab</a>
+                    </article>
+                    <article class="lab-card">
+                        <div>
+                            <p class="icon-line"><i class="fa-solid fa-code"></i> Lab Experiment 6</p>
+                            <h3>QR Factorization</h3>
+                            <p>Gram-Schmidt orthogonalization systems, vector length computing channels, projection planes, and QR factorizations.</p>
+                        </div>
+                        <a class="button-link secondary" href="https://colab.research.google.com/drive/1FFbqccKflahdj-xnPqTE5ywfXOTrD0xl?usp=drive_link" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Lab</a>
+                    </article>
+                    <article class="lab-card">
+                        <div>
+                            <p class="icon-line"><i class="fa-solid fa-code"></i> Lab Experiment 7</p>
+                            <h3>Eigen Systems</h3>
+                            <p>Characteristic equations, invariant direction tracking, eigenvalue derivation, and diagonalization modeling.</p>
+                        </div>
+                        <a class="button-link secondary" href="https://colab.research.google.com/drive/1yTj3bEO0qUR9zFipUSFRUdsP6_wa-BGm?usp=drive_link" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Lab</a>
+                    </article>
+                </div>
+            </section>
+        </section>
+
+        <section class="page" id="project">
+            <section class="section slate">
+                <div class="project-showcase">
+                    <div class="project-frame reveal">
+                        <div class="floating-note large">
+                            <p class="eyebrow">Course Project / Signal Decomposition</p>
+                            <h3>SVD-Based Audio Compression</h3>
+                            <p>An advanced engineering simulator built in Python that converts one-dimensional audio waveforms into spatial 2D matrices and deploys Singular Value Decomposition to execute low-rank data compression.</p>
+                            <a class="button-link" href="https://drive.google.com/file/d/1QlZQQHnB_p7VYiKIh_7KMgew9RZ6-lHs/view?usp=drivesdk" target="_blank" rel="noopener"><i class="fa-solid fa-file-pdf"></i> View Group Report</a>
+                        </div>
+                        <div class="floating-note small">
+                            <h3>k = 20</h3>
+                            <p>Top singular basis components retained for reconstruction.</p>
+                        </div>
+                    </div>
+                    <div class="reveal">
+                        <p class="eyebrow">Project story</p>
+                        <h2 class="section-title">Signal decomposition using orthonormal bases</h2>
+                        <p class="section-text">The project treats a 1D audio sample array $x = [x_1, x_2, \dots, x_N] \in \mathbb{R}^N$ by reshaping it into a 2D matrix entry block $A \in \mathbb{R}^{m \times n}$ with a fixed height $m = 100$.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section alt">
+                <div class="section-header reveal">
+                    <div>
+                        <p class="eyebrow">Group 8</p>
+                        <h2 class="section-title">Project team</h2>
+                    </div>
+                    <p class="section-text">Faculty guidance and team identity from the original project page are preserved here inside the merged portfolio file.</p>
+                </div>
+                <div class="grid-4 reveal">
+                    <div class="team-card"><span>01FE25BCS384</span><h3>T Thirthachandra</h3><p>Roll: 629</p></div>
+                    <div class="team-card"><span>01FE25BCS385</span><h3>Himank Joshi</h3><p>Roll: 630</p></div>
+                    <div class="team-card"><span>01FE25BCS386</span><h3>Ankit Kumar</h3><p>Roll: 631</p></div>
+                    <div class="team-card"><span>01FE25BCS387</span><h3>Kartik Shivshetty</h3><p>Roll: 632</p></div>
+                </div>
+                <div class="grid-2 reveal" style="margin-top: 1rem;">
+                    <div class="card lavender">
+                        <h3><i class="fa-solid fa-chalkboard-user"></i> Mathematics Faculty Guide</h3>
+                        <p><strong>Ms. Vinutha Hanumantappa</strong><br>School of Core Sciences, KLE Technological University.</p>
+                    </div>
+                    <div class="card peach">
+                        <h3><i class="fa-solid fa-code-branch"></i> Computer Science Faculty Guide</h3>
+                        <p><strong>Ms. Priya Ma'am</strong><br>School of Computer Science &amp; Engineering, KLE Tech.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-header reveal">
+                    <div>
+                        <p class="eyebrow">Mathematical matrix decompositions</p>
+                        <h2 class="section-title">Compression method</h2>
+                    </div>
+                    <p class="section-text">Compression is achieved by keeping only the most meaningful singular values and discarding minor components according to the low-rank approximation principle.</p>
+                </div>
+                <div class="grid-2 reveal">
+                    <div class="card">
+                        <h3>Singular Value Factorization</h3>
+                        <p>SVD breaks down signal matrix $A$ into left and right singular vectors, matching orthonormal bases spanning the column and row spaces.</p>
+                        <div class="math-block">$$A = U \Sigma V^T$$</div>
+                    </div>
+                    <div class="card sage-soft">
+                        <h3>Low-Rank Approximation</h3>
+                        <p>Compression keeps the top $k=20$ singular values and reconstructs the compressed signal matrix.</p>
+                        <div class="math-block">$$A_k = U_k \Sigma_k V_k^T$$</div>
+                    </div>
+                </div>
+                <div class="table-wrapper reveal">
+                    <table>
+                        <thead>
+                            <tr><th>Evaluated System Parameter</th><th>Observed Numerical Value</th><th>Analytical Interpretation</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Signal Matrix Dimensions</strong></td><td>$100 \times 849$</td><td>Reshaped layout structure containing $84,900$ total samples.</td></tr>
+                            <tr><td><strong>Original Matrix Rank</strong></td><td>$99$</td><td>Indicates high data content across signal channels.</td></tr>
+                            <tr><td><strong>Retained Singular Basis ($k$)</strong></td><td>$20$ Components</td><td>Keeps the top $\sim 20\%$ of the rank spectrum for reconstruction.</td></tr>
+                            <tr><td><strong>Mean Squared Error (MSE)</strong></td><td>$1,781,629.91$</td><td>Quantifies acceptable distortion against a peak amplitude of $\pm 30,000$.</td></tr>
+                            <tr><td><strong>Compression Storage Ratio</strong></td><td>$4.38$</td><td>Saves the compressed file using only $\sim 22\%$ of its original size.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="section alt">
+                <div class="section-header reveal">
+                    <div>
+                        <p class="eyebrow">Functional Python architecture</p>
+                        <h2 class="section-title">Implementation core</h2>
+                    </div>
+                    <p class="section-text">The original code architecture is preserved as a technical project card.</p>
+                </div>
+                <div class="code-card reveal">
+                    <span style="color:#dccfe5;">import</span> numpy <span style="color:#a8bcb7;">as</span> np<br>
+                    <span style="color:#dccfe5;">import</span> matplotlib.pyplot <span style="color:#a8bcb7;">as</span> plt<br>
+                    <span style="color:#a8bcb7;">from</span> scipy.io <span style="color:#a8bcb7;">import</span> wavfile<br><br>
+                    <span style="color:#e9c8b8;"># Perform Economy Singular Value Decomposition</span><br>
+                    U, S, VT = np.linalg.svd(A, full_matrices=<span style="color:#f2f0dd;">False</span>)<br><br>
+                    <span style="color:#e9c8b8;"># Truncate to top k singular modes</span><br>
+                    k = <span style="color:#f2f0dd;">20</span><br>
+                    Ak = U[:, :k] @ np.diag(S[:k]) @ VT[:k, :]<br><br>
+                    <span style="color:#e9c8b8;"># Convert back to 1D signal vector and check error metrics</span><br>
+                    reconstructed = Ak.reshape(-1)<br>
+                    mse = np.mean((original - reconstructed) ** <span style="color:#f2f0dd;">2</span>)
+                </div>
+                <ul class="outcome-list reveal">
+                    <li><i class="fa-solid fa-circle-check"></i>Formulated raw audio samples as multi-dimensional matrices suitable for mathematical optimization.</li>
+                    <li><i class="fa-solid fa-circle-check"></i>Proved that high-energy signal information consolidates near low-dimensional subspaces via rapid singular value decay.</li>
+                    <li><i class="fa-solid fa-circle-check"></i>Evaluated trade-offs between compression ratios and reconstructed signal fidelity using Mean Squared Error metrics.</li>
+                </ul>
+            </section>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <span>Linear Algebra Portfolio / Kartik Shivshetty</span>
+        <span>One merged HTML file with page navigation.</span>
+    </footer>
+
+    <script>
+        const buttons = document.querySelectorAll(".nav-button");
+        const pages = document.querySelectorAll(".page");
+        const chapterButtons = document.querySelectorAll(".chapter-button");
+        const chapterCards = document.querySelectorAll(".chapter-card");
+
+        function setPage(pageId) {
+            buttons.forEach((button) => {
+                button.classList.toggle("active", button.dataset.page === pageId);
+            });
+
+            pages.forEach((page) => {
+                page.classList.toggle("active", page.id === pageId);
+            });
+
+            window.scrollTo({ top: 0, behavior: "smooth" });
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        buttons.forEach((button) => {
+            button.addEventListener("click", () => setPage(button.dataset.page));
+        });
+
+        document.querySelector("[data-home='intro']").addEventListener("click", () => setPage("intro"));
+
+        function setChapter(chapterId) {
+            chapterButtons.forEach((button) => {
+                button.classList.toggle("active", button.dataset.chapter === chapterId);
+            });
+
+            chapterCards.forEach((card) => {
+                const isActive = card.id === chapterId;
+                card.classList.toggle("active", isActive);
+
+                if (isActive) {
+                    card.classList.add("visible");
+                }
+            });
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        chapterButtons.forEach((button) => {
+            button.addEventListener("click", () => setChapter(button.dataset.chapter));
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("visible");
+                }
+            });
+        }, { threshold: 0.12 });
+
+        document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
+    </script>
+</body>
+</html>
