@@ -12,7 +12,7 @@ The supplied portfolio treats transformation ideas through matrix operators, map
 
 ## Projection
 
-$$\operatorname{proj}_u(v)=\left(\frac{v\cdot u}{u\cdot u}\right)u$$
+$$\mathrm{proj}_u(v)=\left(\frac{v\cdot u}{u\cdot u}\right)u$$
 
 ## Least squares
 
